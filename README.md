@@ -8,9 +8,8 @@ Instructions
 
 Add *.h, *.m to Plugins/ directory and *.js to www/ directory.  
 
-Add these keys to Cordova.plist:
-		<key>fi.peekpoke.cordova.dnssd</key>
-		<string>CDVBonjour</string>
+Add key to Cordova.plist:
+ * fi.peekpoke.cordova.dnssd = CDVBonjour
 
 
 Example
