@@ -21,7 +21,7 @@ DNSSD.prototype.browse=function(regType, domain, serviceFound, serviceLost) {
             serviceLost(result.serviceName, result.regType, result.domain, result.moreComing);
     }
     
-	return Cordova.exec(success, function(){}, "fi.peekpoke.cordova.dnssd", "browse", [regType, domain]);
+	return cordova.exec(success, function(){}, "fi.peekpoke.cordova.dnssd", "browse", [regType, domain]);
 }
 
 DNSSD.prototype.resolve=function(serviceName, regType, domain, serviceResolved) { 
@@ -33,10 +33,10 @@ DNSSD.prototype.resolve=function(serviceName, regType, domain, serviceResolved) 
             serviceResolved(result.hostName, result.port, result.serviceName, result.regType, result.domain);
     }
 	
-	return Cordova.exec(success, function(){}, "fi.peekpoke.cordova.dnssd", "resolve", [serviceName, regType, domain]);
+	return cordova.exec(success, function(){}, "fi.peekpoke.cordova.dnssd", "resolve", [serviceName, regType, domain]);
 }
 
-Cordova.addConstructor(function() {
+cordova.addConstructor(function() {
 	console.log('initializing window.plugins.dnssd'); 
 	if(!window.plugins)	{
 		window.plugins = {};
