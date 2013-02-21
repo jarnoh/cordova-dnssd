@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cordova DNS-SD</title>
+<style>
+ol { border:1px solid black;padding:8px; }
+</style>
+</head>
+<body>
+
+<h1>iTunes shares in local network</h1>
+
+<!-- placeholder for services -->
+<ol id="daap">
+</ol>
+    
+Click item to show IP/port information.
+
+<!-- TODO check your version -->
+<script type="text/javascript" src="cordova-2.2.0.js"></script>
+<!-- TODO get a local jquery copy, eg http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js -->
+<script src="jquery.min.js"></script>
+<script type="text/javascript" src="dnssd.js"></script>
+<script type="text/javascript">
+
+/*
+ 
+Small example for Cordova DNS-SD plugin
+Author <jarnoh@komplex.org> 
+
+*/    
+    
+// helper to convert service instances to html ids 
+function service2id(n)
+{
+	return "dummy_"+n.replace(" ","_");
+}
+
+function serviceResolved(hostName, port, serviceName, regType, domain)
+{
+	alert(serviceName+" is at "+hostName+":"+port);
+	// window.plugins.dnssd.browse(); // cancel browse operation if you dont need it anymore
+}
+
+function serviceLost(serviceName, regType, domain, moreComing)
+{
+	console.log("js serviceLost "+serviceName+" "+regType+" "+moreComing);
+	$(document.getElementById(service2id(serviceName))).remove();
+}
+
+function serviceFound(serviceName, regType, domain, moreComing)
+{
+	console.log("js serviceFound "+serviceName+" "+regType+" "+moreComing);
+
+	var t = $("<li>")
+		.attr("id", service2id(serviceName))
+		.text(serviceName)
+		.click(function() {   
+			window.plugins.dnssd.resolve(serviceName, regType, domain, serviceResolved);
+		});
+	$("#daap").append(t);
+}
+
+document.addEventListener('deviceready', function()
+{
+   	// start browse operation for daap services.  when done, call browse() without parameters to complete it.
+	window.plugins.dnssd.browse("_daap._tcp", "local", serviceFound, serviceLost);
+});
+
+</script>
+</body>
+</html>
