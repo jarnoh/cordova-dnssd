@@ -14,7 +14,9 @@ Add key to Cordova.plist:
 
 Example
 -------
-Coming up later? :)
+There is a <a href="example/">simple DAAP browsing example</a> available,
+it should list shared iTunes DAAP services and by tapping item, resolve the
+actual IP address.
 
 
 Legal
@@ -23,5 +25,5 @@ Legal
 **cordova-dnssd** is licensed with Apache License v2.0.
 (same as Cordova, for license see http://www.apache.org/licenses/LICENSE-2.0)
 
-Copyright (c) 2012 Jarno Heikkinen <jarnoh@komplex.org>.
+Copyright (c) 2012-2013 Jarno Heikkinen <jarnoh@komplex.org>.
 
