@@ -9,11 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/NSNetServices.h>
 
-#ifdef CORDOVA_FRAMEWORK
 #import <Cordova/CDVPlugin.h>
-#else
-#import "CDVPlugin.h"
-#endif
 
 @interface CDVBonjour : CDVPlugin <NSNetServiceBrowserDelegate, NSNetServiceDelegate> 
 {
