@@ -20,58 +20,66 @@
 @synthesize currentResolve;
 
 
-- (void)browse:(NSArray*)arguments withDict:(NSDictionary*)options
+#if !defined(__has_feature) || !__has_feature(objc_arc)
+#error This plugin requires ARC
+#endif
+
+//- (void)browse:(NSArray*)arguments withDict:(NSDictionary*)options
+- (void)browse:(CDVInvokedUrlCommand*)command
 {
     [self.netServiceBrowser stop];
-    [self.netServiceBrowser release];
+//    [self.netServiceBrowser release];
     self.netServiceBrowser=nil;
     
-    NSUInteger argc = [arguments count];
-    NSLog(@"browse argc %d", argc);
+    NSUInteger argc = [command.arguments count];
+    NSLog(@"browse argc %d", (int)argc);
     
 	if (argc < 2) {
         CDVPluginResult* result = [CDVPluginResult
                                    resultWithStatus: CDVCommandStatus_OK
                                    ];
-        NSString* js = [result toSuccessCallbackString:self.browseCallback];
-        [self writeJavascript:js];    
-		return;	
+        [result setKeepCallbackAsBool:NO];
+        [self.commandDelegate sendPluginResult:result callbackId:self.browseCallback];
+        self.browseCallback=nil;
+		return;
 	}
     
-    self.browseCallback = [arguments objectAtIndex:0];
-    NSString *regType = [arguments objectAtIndex:1];
-    NSString *domain = [arguments objectAtIndex:2];
+    self.browseCallback = command.callbackId;
+    NSString *regType = [command.arguments objectAtIndex:0];
+    NSString *domain = [command.arguments objectAtIndex:1];
     self.netServiceBrowser = [[NSNetServiceBrowser alloc] init];
     self.netServiceBrowser.delegate = self;
     
     [self.netServiceBrowser searchForServicesOfType:regType inDomain:domain];
 }
 
-- (void)resolve:(NSArray*)arguments withDict:(NSDictionary*)options
+- (void)resolve:(CDVInvokedUrlCommand*)command
 {
     [self.currentResolve stop];
-    [self.currentResolve release];
+//    [self.currentResolve release];
     self.currentResolve = nil;
     
-    NSUInteger argc = [arguments count];
-    NSLog(@"resolve argc %d", argc);
+    NSUInteger argc = [command.arguments count];
+    NSLog(@"resolve argc %d", (int)argc);
     
-	if (argc < 4) {
+	if (argc < 3) {
         CDVPluginResult* result = [CDVPluginResult
                                    resultWithStatus: CDVCommandStatus_OK
                                    ];
-        NSString* js = [result toSuccessCallbackString:self.resolveCallback];
-        [self writeJavascript:js];    
-        
-		return;	
+        [result setKeepCallbackAsBool:NO];
+        [self.commandDelegate sendPluginResult:result callbackId:self.resolveCallback];
+        self.resolveCallback=nil;
+		return;
 	}
     
-    self.resolveCallback = [arguments objectAtIndex:0];
-    NSString *serviceName = [arguments objectAtIndex:1];
-    NSString *regType = [arguments objectAtIndex:2];
-    NSString *domain = [arguments objectAtIndex:3];
+    self.resolveCallback = command.callbackId;
+    NSString *serviceName = [command.arguments objectAtIndex:0];
+    NSString *regType = [command.arguments objectAtIndex:1];
+    NSString *domain = [command.arguments objectAtIndex:2];
     
-    self.currentResolve = [[NSNetService alloc] initWithDomain:domain type:regType name:serviceName];    
+    self.currentResolve = [[NSNetService alloc] initWithDomain:domain type:regType name:serviceName];
+    
+    NSLog(@"currentResolve %@", self.currentResolve);
     [self.currentResolve setDelegate:self];
     [self.currentResolve resolveWithTimeout:0.0];
 }
@@ -81,7 +89,7 @@
 - (void)netServiceBrowser:(NSNetServiceBrowser*)netServiceBrowser didRemoveService:(NSNetService*)service moreComing:(BOOL)moreComing {
     NSLog(@"didRemoveService");
     
-    NSMutableDictionary* resultDict = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary* resultDict = [[NSMutableDictionary alloc] init];
     [resultDict setObject:[NSNumber numberWithBool:TRUE] forKey:@"serviceLost"];
     [resultDict setObject:service.name forKey:@"serviceName"];
     [resultDict setObject:service.type forKey:@"regType"];
@@ -92,17 +100,14 @@
                                resultWithStatus: CDVCommandStatus_OK
                                messageAsDictionary: resultDict
                                ];
-    [result setKeepCallbackAsBool:TRUE];
-    NSString* js = [result toSuccessCallbackString:self.browseCallback];
-    [self writeJavascript:js];    
-    
-    //    [self.services removeObject:service];
+    [result setKeepCallbackAsBool:YES];
+    [self.commandDelegate sendPluginResult:result callbackId:self.browseCallback];
 }
 
 - (void)netServiceBrowser:(NSNetServiceBrowser*)netServiceBrowser didFindService:(NSNetService*)service moreComing:(BOOL)moreComing {
     NSLog(@"didFindService name %@", service.name);
     
-    NSMutableDictionary* resultDict = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary* resultDict = [[NSMutableDictionary alloc] init];
     [resultDict setObject:[NSNumber numberWithBool:TRUE] forKey:@"serviceFound"];
     [resultDict setObject:service.name forKey:@"serviceName"];
     [resultDict setObject:service.type forKey:@"regType"];
@@ -113,9 +118,8 @@
                                resultWithStatus: CDVCommandStatus_OK
                                messageAsDictionary: resultDict
                                ];
-    [result setKeepCallbackAsBool:TRUE];
-    NSString* js = [result toSuccessCallbackString:self.browseCallback];
-    [self writeJavascript:js];    
+    [result setKeepCallbackAsBool:YES];
+    [self.commandDelegate sendPluginResult:result callbackId:self.browseCallback];
 }
 
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict {
@@ -127,7 +131,7 @@
     NSLog(@"netServiceDidResolveAddress");
     
     
-    NSMutableDictionary* resultDict = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary* resultDict = [[NSMutableDictionary alloc] init];
     
     // FIXME ugly hack to pass IP addresses to javascript, the application server does not support ipv6,
     // and my server is resolving names as ipv6 addresses.
@@ -159,11 +163,11 @@
     CDVPluginResult* result = [CDVPluginResult
                                resultWithStatus: CDVCommandStatus_OK
                                messageAsDictionary: resultDict];
-    NSString* js = [result toSuccessCallbackString:self.resolveCallback];
-    [self writeJavascript:js];    
+    [result setKeepCallbackAsBool:NO];
+    [self.commandDelegate sendPluginResult:result callbackId:self.resolveCallback];
     
     [self.currentResolve stop];
-    [self.currentResolve release];
+//    [self.currentResolve release];
     self.currentResolve = nil;
     
 }

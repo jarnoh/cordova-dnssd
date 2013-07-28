@@ -27,8 +27,9 @@
 @property (nonatomic, retain, readwrite) NSNetServiceBrowser* netServiceBrowser;
 @property (nonatomic, retain, readwrite) NSNetService* currentResolve;
 
-- (void)browse:(NSArray*)arguments withDict:(NSDictionary*)options;
-- (void)resolve:(NSArray*)arguments withDict:(NSDictionary*)options;
+
+- (void)browse:(CDVInvokedUrlCommand*)command;
+- (void)resolve:(CDVInvokedUrlCommand*)command;
 
 
 @end

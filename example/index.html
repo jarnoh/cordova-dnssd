@@ -3,7 +3,7 @@
 <head>
 <title>Cordova DNS-SD</title>
 <style>
-ol { border:1px solid black;padding:8px; }
+ol { border:1px solid black;padding-top:8px;padding-bottom:8px; }
 </style>
 </head>
 <body>
@@ -17,7 +17,7 @@ ol { border:1px solid black;padding:8px; }
 Click item to show IP/port information.
 
 <!-- TODO check your version -->
-<script type="text/javascript" src="cordova-2.2.0.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
 <!-- TODO get a local jquery copy, eg http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js -->
 <script src="jquery.min.js"></script>
 <script type="text/javascript" src="dnssd.js"></script>
@@ -55,6 +55,7 @@ function serviceFound(serviceName, regType, domain, moreComing)
 	var t = $("<li>")
 		.attr("id", service2id(serviceName))
 		.text(serviceName)
+        .css("cursor","pointer")
 		.click(function() {   
 			window.plugins.dnssd.resolve(serviceName, regType, domain, serviceResolved);
 		});

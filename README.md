@@ -1,15 +1,18 @@
 cordova-dnssd
 -------------
 
-Cordova plugin for running DNS-SD browsing and resolving on iOS devices.
+Cordova plugin for running DNS-SD browsing and resolving on iOS and OSX.
 
 Instructions
 ------------
 
-Add *.h, *.m to Plugins/ directory and *.js to www/ directory.  
+Add *.h, *.m to your project and *.js to www/ directory.  
 
-Add key to Cordova.plist:
- * fi.peekpoke.cordova.dnssd = CDVBonjour
+Add node to config.xml:
+
+    <feature name="fi.peekpoke.cordova.dnssd">
+        <param name="ios-package" value="CDVBonjour"/>
+    </feature>
 
 
 Example
