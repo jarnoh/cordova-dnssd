@@ -6,6 +6,12 @@ Cordova plugin for running DNS-SD browsing and resolving on iOS and OSX.
 Instructions
 ------------
 
+#### Cordova 3.X (command line)
+
+`cordova plugin add https://github.com/jarnoh/cordova-dnssd.git`
+
+#### Cordova 2.9 and earlier
+
 Add *.h, *.m to your project and *.js to www/ directory.  
 
 Add node to config.xml:

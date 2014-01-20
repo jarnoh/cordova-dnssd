@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="fi.peekpoke.cordova.dnssd" 
+        version="0.0.2">
+    <engines>
+        <engine name="cordova-ios" version=">=2.9.0" />
+    </engines>
+    <name>Cordova-DNSSD</name>
+    <description>Cordova (PhoneGap) plugin for Bonjour based DNS-SD queries. Enables local service discovery on iOS.</description>
+    <author>Jarno Heikkinen</author>
+    <license>Apache 2.0</license>
+    <keywords>cordova,dnssd,dns-sd,bonjour,discovery</keywords>
+    <asset src="dnssd.js" target="js/dnssd.js" />
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="fi.peekpoke.cordova.dnssd">
+                <param name="ios-package" value="CDVBonjour"/>
+            </feature>
+        </config-file>
+        <header-file src="dnssd.h" />
+        <source-file src="dnssd.m" />
+    </platform>
+</plugin>
